@@ -6,6 +6,9 @@ import org.example.hibernatedemo.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+/**
+ * 新增資料進入資料庫。
+ * */
 public class DemoOneToOneInstructorEx1 {
 
     public static void main(String[] args) {
@@ -16,6 +19,7 @@ public class DemoOneToOneInstructorEx1 {
         try {
             session.beginTransaction();
 
+            // Instructor 有 Cascade。
             Instructor instructor1 = new Instructor();
             instructor1.setName("Andy");
 
@@ -23,9 +27,11 @@ public class DemoOneToOneInstructorEx1 {
             instructorDetail.setEmail("andy@mail.com");
             instructorDetail.setPhone("0987654321");
 
-//            instructorDetail.setInstructor(instructor1);
+            // 進行關聯。
+            // instructorDetail.setInstructor(instructor1);
             instructor1.setInstructorDetail(instructorDetail);
 
+            // 寫在有 Cascade 的那一邊。
             session.persist(instructor1);
 
             session.getTransaction().commit();
