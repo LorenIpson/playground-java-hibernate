@@ -1,15 +1,15 @@
 package org.example.hibernatedemo.action;
 
 import org.example.hibernatedemo.model.one_to_one.Instructor;
-import org.example.hibernatedemo.model.one_to_one.InstructorDetail;
 import org.example.hibernatedemo.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * 只知道 Andy 是 Instructor 1 號，但想要改 Email。
+ * 有 Cascade 的狀況下，把物件轉移到 Removed 狀態。注意 ...Detail 沒有 Cascade，通常只會寫一邊。
+ * 沒有 Cascade 的狀況下，把物件轉移到 Removed 狀態。
  */
-public class DemoOneToOneInstructorEx3 {
+public class DemoOneToOneInstructorEx5 {
 
     public static void main(String[] args) {
 
@@ -19,19 +19,12 @@ public class DemoOneToOneInstructorEx3 {
         try {
             session.beginTransaction();
 
-            Instructor ins1 = session.find(Instructor.class, 1);
+            Instructor ins1 = session.find(Instructor.class, 3);
 
-            if (ins1 != null) {
-                InstructorDetail detail1 = ins1.getInstructorDetail();
-                System.out.print("有這位使用者，原本的 Email 為：");
-                System.out.println(detail1.getEmail());
-                System.out.print("新的使用者 Email 為：");
-                detail1.setEmail("Andretti@mail.com");
-                System.out.println(detail1.getEmail());
-                session.persist(ins1);
-            } else {
-                System.out.println("這個 ID 沒有使用者。");
-            }
+            session.remove(ins1);
+            // session.find 標記為 persist 狀態，session.remove 標記為 removed 狀態，所以不需要再設定為 persist 狀態。
+            // 當 session.find 的物件做了修正，像是更改 email 或 phone number，才需要再設定為 persist 狀態。
+            // session.persist(ins1);
 
             session.getTransaction().commit();
             System.out.println("=======================================");
@@ -46,6 +39,5 @@ public class DemoOneToOneInstructorEx3 {
         } finally {
             HibernateUtil.closeSessionFactory();
         }
-
     }
 }
