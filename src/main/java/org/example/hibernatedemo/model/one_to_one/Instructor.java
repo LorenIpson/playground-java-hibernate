@@ -20,7 +20,8 @@ public class Instructor {
 
     // One To One，JoinColumn 不能和 mappedBy 同時出現。
     @JoinColumn(name = "fk_instructorDetail_id")
-    @OneToOne(cascade = {CascadeType.ALL})
+//    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne
     private InstructorDetail instructorDetail;
 
     public Instructor() {
