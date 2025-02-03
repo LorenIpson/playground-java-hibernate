@@ -1,4 +1,4 @@
-package org.example.hibernatedemo.action;
+package org.example.hibernatedemo.action.one_to_one;
 
 import org.example.hibernatedemo.model.one_to_one.Instructor;
 import org.example.hibernatedemo.model.one_to_one.InstructorDetail;
@@ -7,9 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * 只想刪除 Detail，但是 instructor 要留下。只知道 instructor ID 是 5。
+ * 沒有 cascade 狀況下做刪除，只知道 Giovanni 是 8 號
  */
-public class DemoOneToOneInstructorEx8 {
+public class DemoOneToOneInstructorEx7 {
 
     public static void main(String[] args) {
 
@@ -19,13 +19,12 @@ public class DemoOneToOneInstructorEx8 {
         try {
             session.beginTransaction();
 
-            Instructor ins5 = session.find(Instructor.class, 5);
-            InstructorDetail ins5Detail = ins5.getInstructorDetail();
+            Instructor ins8 = session.find(Instructor.class, 8);
+            InstructorDetail ins8Detail = ins8.getInstructorDetail();
 
-            // 刪除前需要將主表對應到附表的外鍵設定為 null。
-            //ins5Detail.setInstructor(null); 這是錯誤的。
-            ins5.setInstructorDetail(null);
-            session.remove(ins5Detail);
+            // 因為外鍵約束，要注意順序。
+            session.remove(ins8);
+            session.remove(ins8Detail);
 
             session.getTransaction().commit();
             System.out.println("=======================================");
@@ -40,5 +39,6 @@ public class DemoOneToOneInstructorEx8 {
         } finally {
             HibernateUtil.closeSessionFactory();
         }
+
     }
 }

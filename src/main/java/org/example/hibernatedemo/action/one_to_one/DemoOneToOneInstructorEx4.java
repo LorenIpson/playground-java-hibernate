@@ -1,15 +1,14 @@
-package org.example.hibernatedemo.action;
+package org.example.hibernatedemo.action.one_to_one;
 
-import org.example.hibernatedemo.model.one_to_one.Instructor;
 import org.example.hibernatedemo.model.one_to_one.InstructorDetail;
 import org.example.hibernatedemo.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * 只知道 Becca 是 instructor id=5 ，把 email 和 phone 加回去。
- * */
-public class DemoOneToOneInstructorEx9 {
+ * 只知道 Detail ID 是 101，想知道名字。
+ */
+public class DemoOneToOneInstructorEx4 {
 
     public static void main(String[] args) {
 
@@ -19,14 +18,19 @@ public class DemoOneToOneInstructorEx9 {
         try {
             session.beginTransaction();
 
-            Instructor ins5 = session.find(Instructor.class, 5);
-            InstructorDetail ins5Detail = new InstructorDetail();
-            ins5Detail.setEmail("Becca@mail.com");
-            ins5Detail.setPhone("0912876543");
+            InstructorDetail insDetail1 = session.find(InstructorDetail.class, 101);
 
-            // 要記得設定為 persist 狀態。
-            session.persist(ins5Detail);
-            ins5.setInstructorDetail(ins5Detail);
+            if (insDetail1 != null) {
+                String name = insDetail1.getInstructor().getName();
+                if (!name.isEmpty()) {
+                    System.out.print("有使用者，他的名字是：");
+                    System.out.println(name);
+                } else {
+                    System.out.println("這個 ID 有使用者，但沒有名字。");
+                }
+            } else {
+                System.out.println("這個 ID 沒有使用者。");
+            }
 
             session.getTransaction().commit();
             System.out.println("=======================================");
@@ -41,5 +45,6 @@ public class DemoOneToOneInstructorEx9 {
         } finally {
             HibernateUtil.closeSessionFactory();
         }
+
     }
 }

@@ -1,14 +1,15 @@
-package org.example.hibernatedemo.action;
+package org.example.hibernatedemo.action.one_to_one;
 
+import org.example.hibernatedemo.model.one_to_one.Instructor;
 import org.example.hibernatedemo.model.one_to_one.InstructorDetail;
 import org.example.hibernatedemo.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * 只知道 Detail ID 是 101，想知道名字。
+ * 沒有 cascade 狀況下新增資料且做關聯。
  */
-public class DemoOneToOneInstructorEx4 {
+public class DemoOneToOneInstructorEx6 {
 
     public static void main(String[] args) {
 
@@ -18,19 +19,28 @@ public class DemoOneToOneInstructorEx4 {
         try {
             session.beginTransaction();
 
-            InstructorDetail insDetail1 = session.find(InstructorDetail.class, 101);
+            Instructor ins1 = new Instructor();
+            InstructorDetail ins1Detail = new InstructorDetail();
 
-            if (insDetail1 != null) {
-                String name = insDetail1.getInstructor().getName();
-                if (!name.isEmpty()) {
-                    System.out.print("有使用者，他的名字是：");
-                    System.out.println(name);
-                } else {
-                    System.out.println("這個 ID 有使用者，但沒有名字。");
-                }
-            } else {
-                System.out.println("這個 ID 沒有使用者。");
-            }
+            /* fk_instructorDetail_id 是 null。
+            ins1.setName("Carlos");
+            session.persist(ins1);
+
+            ins1Detail.setInstructor(ins1); // 這一行的關係。
+            ins1Detail.setPhone("0987123456");
+            ins1Detail.setEmail("Carlos@mail.com");
+            session.persist(ins1Detail);
+             */
+
+            ins1.setName("Giovanni");
+            session.persist(ins1);
+
+            ins1Detail.setPhone("0987456123");
+            ins1Detail.setEmail("Giovanni@mail.com");
+            // 要設計在 主表物件 連結至附屬表格。
+            // persist 的順序並不重要，只要在 Commit 之前即可。
+            ins1.setInstructorDetail(ins1Detail);
+            session.persist(ins1Detail);
 
             session.getTransaction().commit();
             System.out.println("=======================================");

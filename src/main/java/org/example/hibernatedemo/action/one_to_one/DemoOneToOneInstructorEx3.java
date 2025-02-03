@@ -1,4 +1,4 @@
-package org.example.hibernatedemo.action;
+package org.example.hibernatedemo.action.one_to_one;
 
 import org.example.hibernatedemo.model.one_to_one.Instructor;
 import org.example.hibernatedemo.model.one_to_one.InstructorDetail;

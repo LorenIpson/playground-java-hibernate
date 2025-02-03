@@ -1,4 +1,4 @@
-package org.example.hibernatedemo.action;
+package org.example.hibernatedemo.action.one_to_one;
 
 import org.example.hibernatedemo.model.one_to_one.Instructor;
 import org.example.hibernatedemo.model.one_to_one.InstructorDetail;
@@ -7,9 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * 沒有 cascade 狀況下新增資料且做關聯。
+ * 只想刪除 Detail，但是 instructor 要留下。只知道 instructor ID 是 5。
  */
-public class DemoOneToOneInstructorEx6 {
+public class DemoOneToOneInstructorEx8 {
 
     public static void main(String[] args) {
 
@@ -19,28 +19,13 @@ public class DemoOneToOneInstructorEx6 {
         try {
             session.beginTransaction();
 
-            Instructor ins1 = new Instructor();
-            InstructorDetail ins1Detail = new InstructorDetail();
+            Instructor ins5 = session.find(Instructor.class, 5);
+            InstructorDetail ins5Detail = ins5.getInstructorDetail();
 
-            /* fk_instructorDetail_id 是 null。
-            ins1.setName("Carlos");
-            session.persist(ins1);
-
-            ins1Detail.setInstructor(ins1); // 這一行的關係。
-            ins1Detail.setPhone("0987123456");
-            ins1Detail.setEmail("Carlos@mail.com");
-            session.persist(ins1Detail);
-             */
-
-            ins1.setName("Giovanni");
-            session.persist(ins1);
-
-            ins1Detail.setPhone("0987456123");
-            ins1Detail.setEmail("Giovanni@mail.com");
-            // 要設計在 主表物件 連結至附屬表格。
-            // persist 的順序並不重要，只要在 Commit 之前即可。
-            ins1.setInstructorDetail(ins1Detail);
-            session.persist(ins1Detail);
+            // 刪除前需要將主表對應到附表的外鍵設定為 null。
+            //ins5Detail.setInstructor(null); 這是錯誤的。
+            ins5.setInstructorDetail(null);
+            session.remove(ins5Detail);
 
             session.getTransaction().commit();
             System.out.println("=======================================");
@@ -55,6 +40,5 @@ public class DemoOneToOneInstructorEx6 {
         } finally {
             HibernateUtil.closeSessionFactory();
         }
-
     }
 }
