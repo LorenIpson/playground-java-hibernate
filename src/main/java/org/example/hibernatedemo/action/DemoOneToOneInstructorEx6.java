@@ -38,6 +38,7 @@ public class DemoOneToOneInstructorEx6 {
             ins1Detail.setPhone("0987456123");
             ins1Detail.setEmail("Giovanni@mail.com");
             // 要設計在 主表物件 連結至附屬表格。
+            // persist 的順序並不重要，只要在 Commit 之前即可。
             ins1.setInstructorDetail(ins1Detail);
             session.persist(ins1Detail);
 
