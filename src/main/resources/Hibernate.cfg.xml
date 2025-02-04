@@ -40,6 +40,9 @@
         <mapping class="org.example.hibernatedemo.model.one_to_one.Instructor"/>
         <mapping class="org.example.hibernatedemo.model.one_to_one.InstructorDetail"/>
 
+        <mapping class="org.example.hibernatedemo.model.one_to_many.Books"/>
+        <mapping class="org.example.hibernatedemo.model.one_to_many.BookUsers"/>
+
 
     </session-factory>
 </hibernate-configuration>
